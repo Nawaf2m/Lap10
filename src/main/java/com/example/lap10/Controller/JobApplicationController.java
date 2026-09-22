@@ -35,7 +35,12 @@ public class JobApplicationController {
             return ResponseEntity.status(400).body(new ApiResponse(message));
         }
 
-        jobApplicationService.applyForJob(jobApplication);
+        int status = jobApplicationService.applyForJob(jobApplication);
+        if (status == 0){
+            return ResponseEntity.status(200).body(new ApiResponse("User not found"));
+        } else if (status == 1) {
+            return ResponseEntity.status(200).body(new ApiResponse("Job post not found"));
+        }
         return ResponseEntity.status(200).body(new ApiResponse("Job application added successfully"));
     }
 

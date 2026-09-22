@@ -1,7 +1,11 @@
 package com.example.lap10.Service;
 
 import com.example.lap10.Model.JobApplication;
+import com.example.lap10.Model.JobPost;
+import com.example.lap10.Model.User;
 import com.example.lap10.Repository.JobApplicationRepository;
+import com.example.lap10.Repository.JobPostRepository;
+import com.example.lap10.Repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,13 +15,27 @@ import java.util.List;
 @RequiredArgsConstructor
 public class JobApplicationService {
     private final JobApplicationRepository jobApplicationRepository;
+    private final UserRepository userRepository;
+    private final JobPostRepository jobPostRepository;
 
     public List<JobApplication> get(){
         return jobApplicationRepository.findAll();
     }
 
-    public void applyForJob(JobApplication jobApplication){
+    public int applyForJob(JobApplication jobApplication){
+        User user = userRepository.findUserById(jobApplication.getUserId());
+        JobPost jobPost = jobPostRepository.findJobPostById(jobApplication.getJobPostId());
+
+        if (user == null){
+            return 0;
+        }
+
+        if (jobPost == null){
+            return 1;
+        }
+
         jobApplicationRepository.save(jobApplication);
+        return 2;
     }
 
     public boolean update(Integer id, JobApplication jobApplication){
